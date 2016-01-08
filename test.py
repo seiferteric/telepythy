@@ -1,4 +1,4 @@
-from rempy import Remote
+from telepythy import Remote
 
 h = Remote('localhost')
 
