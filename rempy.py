@@ -18,12 +18,18 @@ args = pickle.loads(\"\"\"{1}\"\"\")
 kwargs = pickle.loads(\"\"\"{2}\"\"\")
 save_stdout = sys.stdout
 sys.stdout = open(os.devnull, 'w')
-ret = pickle.dumps({0}(*args, **kwargs))
+try:
+    ret = pickle.dumps({0}(*args, **kwargs))
+except Exception as e:
+    ret = pickle.dumps(e)
 sys.stdout = save_stdout
 print ret
 """.format(func.__name__, pickle.dumps(args), pickle.dumps(kwargs))
         pinput = StringIO.StringIO(code)
         p = subprocess.Popen(['ssh', self.host, 'python'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         output, output_err = p.communicate(pinput.read())
-        return pickle.loads(output)
+        ret = pickle.loads(output)
+        if isinstance(ret, Exception):
+            raise ret
+        return ret
 

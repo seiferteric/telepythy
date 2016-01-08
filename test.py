@@ -3,8 +3,11 @@ from rempy import Remote
 h = Remote('localhost')
 
 def getfiles(dir='/'):
-    return open("/home/eseifert/.ssh/id_rsa.pub").read()
+    return open("/myfile").read()
 
-ret = h.run(getfiles)
 
-print ret
+try:
+    print h.run(getfiles)
+except:
+    print "Handled Exception..."
+
