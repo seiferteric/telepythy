@@ -2,12 +2,12 @@ from rempy import Remote
 
 h = Remote('localhost')
 
+
 def getfiles(dir='/'):
-    return open("/myfile").read()
+    return open("/etc/hosts").read()
 
 
 try:
-    print h.run(getfiles)
+    print h.run(getfiles, dir="/home")
 except:
     print "Handled Exception..."
-

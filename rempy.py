@@ -5,6 +5,7 @@ import inspect
 import StringIO
 import pickle
 
+
 class Remote(object):
     def __init__(self, host):
         self.host = host
@@ -26,10 +27,13 @@ sys.stdout = save_stdout
 print ret
 """.format(func.__name__, pickle.dumps(args), pickle.dumps(kwargs))
         pinput = StringIO.StringIO(code)
-        p = subprocess.Popen(['ssh', self.host, 'python'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        p = subprocess.Popen(
+                             ['ssh', self.host, 'python'],
+                             stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE
+                             )
         output, output_err = p.communicate(pinput.read())
         ret = pickle.loads(output)
         if isinstance(ret, Exception):
             raise ret
         return ret
-
