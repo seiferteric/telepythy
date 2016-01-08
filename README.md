@@ -1,4 +1,4 @@
-# rempy
+# telepythy
 Remote Python Runner
 
 This is an experimental library to make it easy to run python functions on
@@ -12,13 +12,13 @@ except for python (and any libraries you intend to use).
 
 After you create a Remote object, you can use the run method to pass a function
 you want to run on the remote machine. The method can take arguments and return
-arguments as normal. Since rempy uses pickle to marshal the arguments and
+arguments as normal. Since telepythy uses pickle to marshal the arguments and
 return values, they must be picklable objects.
 
 #Example:
 
 ```python
-from rempy import Remote
+from telepythy import Remote
 
 s = Remote("myserver")
 
@@ -26,10 +26,11 @@ def doremotething(arg1, arg2='/'):
     import os
     return os.listdir(arg2), arg1
 
+try:
+    print s.run(doremotething, "myarg", arg2="/usr")
+except:
+    print 'I even handle remote exceptions!'
 
-ret = s.run(doremotething, "myarg", arg2="/usr")
-
-print ret
 ```
 
 #TODO:
