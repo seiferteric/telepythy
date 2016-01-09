@@ -9,5 +9,7 @@ def getfiles(dir='/'):
 
 try:
     print h.run(getfiles, dir="/home")
-except:
+    h.close()
+except Exception as e:
     print "Handled Exception..."
+    print e
