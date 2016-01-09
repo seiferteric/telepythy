@@ -33,9 +33,13 @@ except:
 
 ```
 
+#Install
+
+```
+sudo pip install git+https://github.com/seiferteric/telepythy.git
+```
+
 #TODO:
 
-- Use paramiko, open multiple channels to leave stdout/stdin intact and pass
-  args/return data back over another channel.
-- Accept password authentication.
-- Maybe enable remote file access with some sort of RemoteFile object?
+- Open multiple channels to leave stdout/stdin intact and pass args/return
+  data back over another channel?
