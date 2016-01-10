@@ -30,8 +30,8 @@ for server in servers:
     s = Remote(server)
     try:
         dir_lists.append(s.run(do_remote_thing, dir="/usr"))
-    except:
-        print 'I even handle remote exceptions!'
+    except Exception as e:
+        print 'I even handle remote exceptions! %s'%e
 
 ```
 
