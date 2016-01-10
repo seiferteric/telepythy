@@ -20,16 +20,18 @@ return values, they must be picklable objects.
 ```python
 from telepythy import Remote
 
-s = Remote("myserver")
-
-def doremotething(arg1, arg2='/'):
+def do_remote_thing(dir='/'):
     import os
-    return os.listdir(arg2), arg1
+    return os.listdir(dir)
 
-try:
-    print s.run(doremotething, "myarg", arg2="/usr")
-except:
-    print 'I even handle remote exceptions!'
+servers = ['myserver1', 'myserver2', 'myserver3']
+dir_lists = []
+for server in servers:
+    s = Remote(server)
+    try:
+        dir_lists.append(s.run(do_remote_thing, dir="/usr"))
+    except:
+        print 'I even handle remote exceptions!'
 
 ```
 

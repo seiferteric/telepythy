@@ -3,12 +3,12 @@ from telepythy import Remote
 h = Remote('localhost')
 
 
-def getfiles(dir='/'):
-    return open("/etc/hosts").read()
+def getfile(filename="/etc/hosts"):
+    return open(filename).read()
 
 
 try:
-    print h.run(getfiles, dir="/home")
+    print h.run(getfile)
     h.close()
 except Exception as e:
     print "Handled Exception..."
