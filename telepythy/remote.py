@@ -4,6 +4,7 @@ import subprocess
 import inspect
 import pickle
 import paramiko
+import sys
 
 
 class Remote(object):
@@ -22,19 +23,26 @@ class Remote(object):
         self.ssh.close()
 
     def run(self, func, *args, **kwargs):
-        code = inspect.getsource(func) + "\n"
-        code += inspect.getsource(_wrapper_function).format(
-               func.__name__,
-               pickle.dumps(args),
-               pickle.dumps(kwargs),
-            )
-        code += "\n_wrapper_function()\n"
+
+        si, so, sr = self.ssh.exec_command('tempfile')
+        tmpfile = so.read().rstrip()
+        code = '\n'.join([
+            inspect.getsource(func),
+            inspect.getsource(_wrapper_function).format(
+                func.__name__,
+                pickle.dumps(args),
+                pickle.dumps(kwargs),
+                tmpfile,
+            ),
+            "_wrapper_function()"
+        ])
         si, so, sr = self.ssh.exec_command('python')
         si.write(code)
-        si.flush()
         si.channel.shutdown_write()
-        output = so.read()
-        ret = pickle.loads(output)
+        sys.stdout.write(so.read())
+        sys.stderr.write(sr.read())
+        si, so, sr = self.ssh.exec_command('cat {0}; rm -f {0}'.format(tmpfile))
+        ret = pickle.loads(so.read())
         if isinstance(ret, Exception):
             raise ret
         return ret
@@ -46,11 +54,10 @@ def _wrapper_function():
     import pickle
     args = pickle.loads("""{1}""")
     kwargs = pickle.loads("""{2}""")
-    save_stdout = sys.stdout
-    sys.stdout = open(os.devnull, 'w')
+    tmpfile = "{3}"
     try:
         ret = pickle.dumps({0}(*args, **kwargs))
     except Exception as e:
         ret = pickle.dumps(e)
-    sys.stdout = save_stdout
-    print ret
+    with open(tmpfile, "w") as f:
+        print >> f, ret

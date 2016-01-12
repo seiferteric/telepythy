@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-ver = "0.0.1"
+ver = "0.0.2"
 
 setup(
       name = "telepythy",
