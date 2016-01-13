@@ -25,9 +25,7 @@ def do_remote_thing(dir='/'):
     print "I am remote!"
     return os.listdir(dir)
 
-server = 'localhost'
-
-s = Remote(server)
+s = Remote('localhost')
 
 try:
     dir_list = s.run(
