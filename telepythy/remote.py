@@ -25,39 +25,43 @@ class Remote(object):
     def run(self, func, *args, **kwargs):
 
         si, so, sr = self.ssh.exec_command('tempfile')
-        tmpfile = so.read().rstrip()
+        tmpfile = so.read().rstrip().decode('utf-8')
         code = '\n'.join([
             inspect.getsource(func),
             inspect.getsource(_wrapper_function).format(
                 func.__name__,
-                pickle.dumps(args),
-                pickle.dumps(kwargs),
-                tmpfile,
+                repr(pickle.dumps(args)),
+                repr(pickle.dumps(kwargs)),
+                repr(tmpfile),
             ),
             "_wrapper_function()"
         ])
-        si, so, sr = self.ssh.exec_command('python')
+        if sys.version_info[0] == 2:
+            si, so, sr = self.ssh.exec_command('python')
+        else:
+            si, so, sr = self.ssh.exec_command('python3')
         si.write(code)
         si.channel.shutdown_write()
-        sys.stdout.write(so.read())
-        sys.stderr.write(sr.read())
+        sys.stdout.write(so.read().decode('utf-8'))
+        sys.stderr.write(sr.read().decode('utf-8'))
         si, so, sr = self.ssh.exec_command('cat {0}; rm -f {0}'.format(tmpfile))
         ret = pickle.loads(so.read())
         if isinstance(ret, Exception):
             raise ret
         return ret
+        return None
 
 
 def _wrapper_function():
     import sys
     import os
     import pickle
-    args = pickle.loads("""{1}""")
-    kwargs = pickle.loads("""{2}""")
-    tmpfile = "{3}"
+    args = pickle.loads({1})
+    kwargs = pickle.loads({2})
+    tmpfile = {3}
     try:
-        ret = pickle.dumps({0}(*args, **kwargs))
+        ret = {0}(*args, **kwargs)
     except Exception as e:
-        ret = pickle.dumps(e)
-    with open(tmpfile, "w") as f:
-        print >> f, ret
+        ret = e
+    with open(tmpfile, "wb") as f:
+        pickle.dump(ret, f)

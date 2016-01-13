@@ -40,8 +40,3 @@ for server in servers:
 ```
 sudo pip install git+https://github.com/seiferteric/telepythy.git
 ```
-
-#TODO:
-
-- Open multiple channels to leave stdout/stdin intact and pass args/return
-  data back over another channel?

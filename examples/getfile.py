@@ -8,8 +8,8 @@ def getfile(filename="/etc/hosts"):
 
 
 try:
-    print h.run(getfile)
+    print(h.run(getfile))
     h.close()
 except Exception as e:
-    print "Handled Exception..."
-    print e
+    print("Handled Exception...")
+    print(e)
