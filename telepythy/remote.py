@@ -44,7 +44,7 @@ class Remote(object):
         si.channel.shutdown_write()
         sys.stdout.write(so.read().decode('utf-8'))
         sys.stderr.write(sr.read().decode('utf-8'))
-        si, so, sr = self.ssh.exec_command('cat {0}; rm -f {0}'.format(tmpfile))
+        si, so, sr = self.ssh.exec_command('cat {0};rm {0}'.format(tmpfile))
         ret = pickle.loads(so.read())
         if isinstance(ret, Exception):
             raise ret
