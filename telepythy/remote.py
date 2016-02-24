@@ -24,7 +24,7 @@ class Remote(object):
 
     def run(self, func, *args, **kwargs):
 
-        si, so, sr = self.ssh.exec_command('tempfile')
+        si, so, sr = self.ssh.exec_command('mktemp')
         tmpfile = so.read().rstrip().decode('utf-8')
         code = '\n'.join([
             inspect.getsource(func),
