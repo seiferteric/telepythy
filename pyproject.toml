@@ -1,5 +1,5 @@
 [project]
-name = "telepythy_seiferteric"
+name = "telepythy"
 version = "0.0.1"
 authors = [
   { name="Eric Seifert", email="eric@seifert.casa" },
