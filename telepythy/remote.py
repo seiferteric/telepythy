@@ -21,7 +21,10 @@ class Remote(object):
 
         # Check configuration file
         config = paramiko.SSHConfig()
-        config.parse(open(os.path.expanduser('~/.ssh/config')))
+        try:
+            config.parse(open(os.path.expanduser('~/.ssh/config')))
+        except:
+            pass
         host = config.lookup(host)
         if 'proxycommand' in host:
             cfg['sock'] = paramiko.ProxyCommand(
