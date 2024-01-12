@@ -21,8 +21,3 @@ classifiers = [
 "Homepage" = "https://github.com/seiferteric/telepythy"
 "Bug Tracker" = "https://github.com/seiferteric/telepythy/issues"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-
