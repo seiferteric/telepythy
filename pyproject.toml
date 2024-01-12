@@ -1,0 +1,28 @@
+[project]
+name = "telepythy_seiferteric"
+version = "0.0.1"
+authors = [
+  { name="Eric Seifert", email="eric@seifert.casa" },
+]
+description = "Remote python runner"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.7"
+dependencies = [
+  "paramiko",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/seiferteric/telepythy"
+"Bug Tracker" = "https://github.com/seiferteric/telepythy/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
