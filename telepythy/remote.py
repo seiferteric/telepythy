@@ -1,23 +1,46 @@
 #!/usr/bin/python
-
 import subprocess
 import inspect
 import pickle
 import paramiko
 import sys
+import os
 
 
 class Remote(object):
     def __init__(self, host, username=None, password=None, key_filename=None):
         self.host = host
         self.ssh = paramiko.SSHClient()
+
+        cfg = {
+            'hostname': self.host,
+            'username': username,
+            'key_filename': key_filename,
+            'password': password
+        }
+
+        # Check configuration file
+        config = paramiko.SSHConfig()
+        config.parse(open(os.path.expanduser('~/.ssh/config')))
+        host = config.lookup(host)
+        if 'proxycommand' in host:
+            cfg['sock'] = paramiko.ProxyCommand(
+                subprocess.check_output(
+                    [os.environ['SHELL'], '-c', 'echo %s' % host['proxycommand']]
+                ).strip()
+            )
+        else:
+            cfg['sock'] = None
+
+        if 'hostname' in host:
+            cfg['hostname'] = host['hostname']
+        if 'user' in host:
+            cfg['username'] = host['user']
+        if 'IdentityFile' in host:
+            cfg['key_filename'] = host['IdentityFile']
+        self.ssh.load_system_host_keys()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.ssh.connect(
-            self.host,
-            username=username,
-            password=password,
-            key_filename=key_filename
-        )
+        self.ssh.connect(**cfg)
 
     def close(self):
         self.ssh.close()
