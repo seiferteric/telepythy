@@ -17,7 +17,7 @@ return values, they must be picklable objects.
 
 # Examples:
 
-## Show contents of remote directory and handle possible exceptions
+## Show contents of remote directory and handle possible exceptions:
 ```python
 from telepythy import Remote
 
