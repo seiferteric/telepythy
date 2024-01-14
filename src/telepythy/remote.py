@@ -5,7 +5,7 @@ import pickle
 import paramiko
 import sys
 import os
-
+import threading
 
 class Remote(object):
     def __init__(self, host, username=None, password=None, key_filename=None):
@@ -49,7 +49,7 @@ class Remote(object):
         self.ssh.close()
 
     def run(self, func, *args, **kwargs):
-
+        self._ret = None
         si, so, sr = self.ssh.exec_command('mktemp')
         tmpfile = so.read().rstrip().decode('utf-8')
         code = '\n'.join([
@@ -74,8 +74,15 @@ class Remote(object):
         ret = pickle.loads(so.read())
         if isinstance(ret, Exception):
             raise ret
+        self._ret = ret
         return ret
-        return None
+    def run_async(self, func, *args, **kwargs):
+        self._thread = threading.Thread(target=self.run, args=(func, *args), kwargs=kwargs)
+        self._thread.start()
+    def return_async(self, timeout=None):
+        self._thread.join(timeout)
+        #self.run()
+        return self._ret
 
 
 def _wrapper_function():
