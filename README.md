@@ -15,7 +15,7 @@ you want to run on the remote machine. The method can take arguments and return
 arguments as normal. Since telepythy uses pickle to marshal the arguments and
 return values, they must be picklable objects.
 
-#Example:
+# Examples:
 
 ```python
 from telepythy import Remote
@@ -40,7 +40,7 @@ for dir in dir_list:
 
 ```
 
-#Install
+# Install
 
 ```
 sudo pip install git+https://github.com/seiferteric/telepythy.git
